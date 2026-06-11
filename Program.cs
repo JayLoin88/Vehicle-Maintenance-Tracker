@@ -2,10 +2,12 @@
 
 while (true)
 {
-    Console.WriteLine("=== Vehicle Maintenance Tracker ===");
+    Console.WriteLine("\n=== Vehicle Maintenance Tracker ===");
 
     Console.WriteLine("1. Add vehicle");
     Console.WriteLine("2. View vehicle");
+    Console.WriteLine("3. Add maintenance record - WIP");
+    Console.WriteLine("4. Delete vehicle");
 
 
     if (int.TryParse(Console.ReadLine(), out int menuSelection))
@@ -24,11 +26,11 @@ while (true)
             case 4:
                 DeleteVehicle();
                 break;
+            default:
+                Console.WriteLine("Invalid option\n");
+                break;
+
         }
-    }
-    else
-    {
-        Console.WriteLine("Invalid option");
     }
 
 
@@ -36,7 +38,7 @@ while (true)
     {
         while (true)
         {
-            Console.WriteLine("Please enter the vehicle Make");
+            Console.WriteLine("\nPlease enter the vehicle Make");
             string? currentVehicleMake = Console.ReadLine();
 
             Console.WriteLine("Please enter the vehicle Model");
@@ -45,7 +47,7 @@ while (true)
             Console.WriteLine("Please enter the vehicle Year");
             if (!int.TryParse(Console.ReadLine(), out int currentVehicleYear))
             {
-                Console.WriteLine("Invalid input");
+                Console.WriteLine("Invalid input\n");
                 break;
             }
 
@@ -67,6 +69,8 @@ while (true)
             Console.WriteLine($"{vehicleList.Count}: {vehicle.Make} {vehicle.Model} {vehicle.Year}");
         } */
 
+        Console.WriteLine();
+
         for (int i = 0; i < vehicleList.Count; i++)
         {
             Console.WriteLine($"{i}: {vehicleList[i].Make} {vehicleList[i].Model} {vehicleList[i].Year}");
@@ -81,8 +85,39 @@ while (true)
 
     }
 
-    void DeleteVehicle()
+    void DeleteVehicle() //unfinished but functional
     {
+        Console.WriteLine("\nPlease enter the number of vehicle you wish to delete from the list/n");
+
+        for (int i = 0; i < vehicleList.Count; i++)
+        {
+            Console.WriteLine($"{i}: {vehicleList[i].Make} {vehicleList[i].Model} {vehicleList[i].Year}");
+        }
+
+        for (int i = vehicleList.Count - 1; i >= 0; i--)
+        {
+            switch (i)
+            {
+                case var _ when int.TryParse(Console.ReadLine(), out int userInput):
+                    if (userInput <= vehicleList.Count)
+                    {
+                        vehicleList.RemoveAt(userInput);
+                        Console.WriteLine("\nVehicle Removed\nPress Enter");
+                        Console.ReadLine();
+                    }
+                    else
+                    {
+                        Console.WriteLine("\nInvalid input\nPress Enter");
+                        Console.ReadLine();
+                    }
+                    return;
+                default:
+                    Console.WriteLine("\nInvalid Input\nPress Enter");
+                    Console.ReadLine();
+                    break;
+            }
+
+        }
 
     }
 }
