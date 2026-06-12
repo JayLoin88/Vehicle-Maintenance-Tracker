@@ -5,9 +5,10 @@ while (true)
     Console.WriteLine("\n=== Vehicle Maintenance Tracker ===");
 
     Console.WriteLine("1. Add vehicle");
-    Console.WriteLine("2. View vehicle");
-    Console.WriteLine("3. Add maintenance record - WIP");
-    Console.WriteLine("4. Delete vehicle");
+    Console.WriteLine("2. View vehicles");
+    Console.WriteLine("3. Add maintenance record");
+    Console.WriteLine("4. View maintenance record");
+    Console.WriteLine("5. Delete vehicle");
 
 
     if (int.TryParse(Console.ReadLine(), out int menuSelection))
@@ -24,6 +25,9 @@ while (true)
                 AddMaintenanceRecord();
                 break;
             case 4:
+                ViewMaintenanceRecord();
+                break;
+            case 5:
                 DeleteVehicle();
                 break;
             default:
@@ -73,7 +77,7 @@ while (true)
 
         for (int i = 0; i < vehicleList.Count; i++)
         {
-            Console.WriteLine($"{i}: {vehicleList[i].Make} {vehicleList[i].Model} {vehicleList[i].Year}");
+            Console.WriteLine($"{i}: {vehicleList[i].Make} {vehicleList[i].Model} {vehicleList[i].Year} \tLast recorded maintenance: {vehicleList[i].vehicleMaintenanceRecord.FirstOrDefault()}");
         }
 
         Console.WriteLine("\nPress enter to return to menu\n");
@@ -82,19 +86,68 @@ while (true)
 
     void AddMaintenanceRecord()
     {
-
-    }
-
-    void DeleteVehicle() //unfinished but functional
-    {
-        Console.WriteLine("\nPlease enter the number of vehicle you wish to delete from the list/n");
+        Console.WriteLine("\nPlease select which vehicle you wish to add a maintenance record to\n");
 
         for (int i = 0; i < vehicleList.Count; i++)
         {
             Console.WriteLine($"{i}: {vehicleList[i].Make} {vehicleList[i].Model} {vehicleList[i].Year}");
         }
 
-        for (int i = vehicleList.Count - 1; i >= 0; i--)
+        if (int.TryParse(Console.ReadLine(), out int userInput))
+        {
+            if (userInput <= vehicleList.Count)
+            {
+                Console.WriteLine("Please enter the maintenance that was performed on the vehicle");
+                string? maintenancePerformed = Console.ReadLine();
+                Console.WriteLine("Please enter the date the maintenance was performed - Format: MM/DD/YYYY");
+                string? maintenanceDate = Console.ReadLine();
+
+                string maintenanceRecorded = maintenancePerformed + " " + maintenanceDate;
+
+                vehicleList[userInput].vehicleMaintenanceRecord.Add(maintenanceRecorded);
+            }
+            else
+            {
+                Console.WriteLine("Invalid input\nPress Enter");
+                Console.ReadLine();
+            }
+        }
+    }
+
+    void ViewMaintenanceRecord()
+    {
+        Console.WriteLine("\nPlease select which vehicle you wish to view\n");
+
+        for (int i = 0; i < vehicleList.Count; i++)
+        {
+            Console.WriteLine($"{i}: {vehicleList[i].Make} {vehicleList[i].Model} {vehicleList[i].Year}");
+        }
+
+        if (int.TryParse(Console.ReadLine(), out int userInput))
+        {
+            if (userInput <= vehicleList.Count)
+            {
+                foreach (var maintenanceRecord in vehicleList[userInput].vehicleMaintenanceRecord)
+                {
+                    Console.WriteLine(maintenanceRecord);
+                }
+
+                Console.WriteLine("\nPress Enter to return to menu\n");
+                Console.ReadLine();
+            }
+        }
+    }
+
+    void DeleteVehicle() //unfinished but functional | second for loop needs to be changed to avoid unreachable code
+    {
+        Console.WriteLine("\nPlease enter the number of vehicle you wish to delete from the list\n");
+
+        for (int i = 0; i < vehicleList.Count; i++)
+        {
+            Console.WriteLine($"{i}: {vehicleList[i].Make} {vehicleList[i].Model} {vehicleList[i].Year} Last recorded maintenance: {vehicleList[i].vehicleMaintenanceRecord.LastOrDefault()}");
+        }
+
+        for (int i = vehicleList.Count - 1; i >= 0; i--) // conditional if statement or while loop will be an improvement over a for loop
         {
             switch (i)
             {
@@ -114,7 +167,7 @@ while (true)
                 default:
                     Console.WriteLine("\nInvalid Input\nPress Enter");
                     Console.ReadLine();
-                    break;
+                    return; // for loop becomes unreachable when default case is set to return instead of break
             }
 
         }
@@ -129,4 +182,5 @@ class Vehicle
     public string? Make { get; set; }
     public string? Model { get; set; }
     public int Year { get; set; }
+    public List<string> vehicleMaintenanceRecord { get; } = new List<string>();
 }
