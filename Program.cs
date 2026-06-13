@@ -62,6 +62,10 @@ while (true)
             vehicle.Year = currentVehicleYear;
 
             vehicleList.Add(vehicle);
+
+            Console.WriteLine("\nVehicle entered\nPress enter to return to the main menu");
+            Console.ReadLine();
+
             break;
         }
     }
@@ -77,8 +81,8 @@ while (true)
 
         for (int i = 0; i < vehicleList.Count; i++)
         {
-            Console.WriteLine($"{i}: {vehicleList[i].Make} {vehicleList[i].Model} {vehicleList[i].Year} \tLast recorded maintenance: {vehicleList[i].vehicleMaintenanceRecord.FirstOrDefault()}");
-        }
+            Console.WriteLine($"{i}: {vehicleList[i].Make} {vehicleList[i].Model} {vehicleList[i].Year} \tLast recorded maintenance: {vehicleList[i].vehicleMaintenanceRecord.FirstOrDefault()}"); 
+        }                                                                                               //needs formatting and sorting for Last recorded maintenance display in terminal
 
         Console.WriteLine("\nPress enter to return to menu\n");
         Console.ReadLine();
@@ -138,7 +142,7 @@ while (true)
         }
     }
 
-    void DeleteVehicle() //unfinished but functional | second for loop needs to be changed to avoid unreachable code
+    void DeleteVehicle()
     {
         Console.WriteLine("\nPlease enter the number of vehicle you wish to delete from the list\n");
 
@@ -147,7 +151,7 @@ while (true)
             Console.WriteLine($"{i}: {vehicleList[i].Make} {vehicleList[i].Model} {vehicleList[i].Year} Last recorded maintenance: {vehicleList[i].vehicleMaintenanceRecord.LastOrDefault()}");
         }
 
-        for (int i = vehicleList.Count - 1; i >= 0; i--) // conditional if statement or while loop will be an improvement over a for loop
+        /* for (int i = vehicleList.Count - 1; i >= 0; i--) // conditional if statement or while loop will be an improvement over a for loop
         {
             switch (i)
             {
@@ -168,10 +172,19 @@ while (true)
                     Console.WriteLine("\nInvalid Input\nPress Enter");
                     Console.ReadLine();
                     return; // for loop becomes unreachable when default case is set to return instead of break
-            }
+            } */
 
+        if (int.TryParse(Console.ReadLine(), out int userInput) && (userInput <= vehicleList.Count))
+        {
+            vehicleList.RemoveAt(userInput);
+            Console.WriteLine("\nVehicle Removed\nPress Enter");
+            Console.ReadLine();
         }
-
+        else
+        {
+            Console.WriteLine("\nInvalid input\nPress Enter");
+            Console.ReadLine();
+        }
     }
 }
 
