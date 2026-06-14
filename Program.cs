@@ -11,7 +11,6 @@ while (true)
     Console.WriteLine("5. Delete vehicle");
     Console.WriteLine("6. Exit application\n");
 
-
     if (int.TryParse(Console.ReadLine(), out int menuSelection))
     {
         switch (menuSelection)
@@ -39,7 +38,6 @@ while (true)
 
         }
     }
-
 
     void AddVehicle()
     {
@@ -115,14 +113,25 @@ while (true)
             {
                 if (userInput <= vehicleList.Count)
                 {
+                    ServiceRecord serviceRecord = new ServiceRecord();
+                    vehicleList[userInput].vehicleMaintenanceRecord.Add(serviceRecord);
                     Console.WriteLine("Please enter the maintenance that was performed on the vehicle");
-                    string? maintenancePerformed = Console.ReadLine();
+                    vehicleList[userInput].vehicleMaintenanceRecord[userInput].ServicePerformed = Console.ReadLine();
                     Console.WriteLine("Please enter the date the maintenance was performed - Format: MM/DD/YYYY");
-                    string? maintenanceDate = Console.ReadLine();
+                    vehicleList[userInput].vehicleMaintenanceRecord[userInput].ServiceDate = Console.ReadLine();
+                    Console.WriteLine("Please enter the milage of the vehicle");
+                    if (int.TryParse(Console.ReadLine(), out int miles))
+                    {
+                        vehicleList[userInput].vehicleMaintenanceRecord[userInput].Milage = miles;
+                    }
+                    else
+                    {
+                        Console.WriteLine("Invalid input\nPress enter to return to the menu");
+                        Console.ReadLine();
+                    }
 
-                    string maintenanceRecorded = maintenancePerformed + " " + maintenanceDate;
-
-                    vehicleList[userInput].vehicleMaintenanceRecord.Add(maintenanceRecorded);
+                    Console.WriteLine("Maintenance record added\nPress Enter to return to the main menu");
+                    Console.ReadLine();
                 }
                 else
                 {
@@ -237,12 +246,17 @@ while (true)
     }
 }
 
-
-
 class Vehicle
 {
     public string? Make { get; set; }
     public string? Model { get; set; }
     public int Year { get; set; }
-    public List<string> vehicleMaintenanceRecord { get; } = new List<string>();
+    public List<ServiceRecord> vehicleMaintenanceRecord { get; } = new List<ServiceRecord>();
+}
+
+class ServiceRecord
+{
+    public string? ServicePerformed { get; set; }
+    public string? ServiceDate { get; set; }
+    public int Milage { get; set; }
 }
