@@ -7,7 +7,7 @@ while (true)
     Console.WriteLine("1. Add vehicle");
     Console.WriteLine("2. View vehicles");
     Console.WriteLine("3. Add maintenance record");
-    Console.WriteLine("4. View maintenance record");
+    Console.WriteLine("4. View maintenance records");
     Console.WriteLine("5. Delete vehicle");
     Console.WriteLine("6. Exit application\n");
 
@@ -25,7 +25,7 @@ while (true)
                 AddMaintenanceRecord();
                 break;
             case 4:
-                ViewMaintenanceRecord();
+                ViewMaintenanceRecords();
                 break;
             case 5:
                 DeleteVehicle();
@@ -84,8 +84,8 @@ while (true)
         {
             for (int i = 0; i < vehicleList.Count; i++)
             {
-                Console.WriteLine($"{i}: {vehicleList[i].Make} {vehicleList[i].Model} {vehicleList[i].Year} \tLast recorded maintenance: {vehicleList[i].vehicleMaintenanceRecord.FirstOrDefault()}");
-            }                                                                                               //needs formatting and sorting for Last recorded maintenance display in terminal
+                Console.WriteLine($"{i}: {vehicleList[i].Make} {vehicleList[i].Model} {vehicleList[i].Year}");
+            }
 
             Console.WriteLine("\nPress enter to return to menu\n");
             Console.ReadLine();
@@ -111,26 +111,31 @@ while (true)
 
             if (int.TryParse(Console.ReadLine(), out int userInput))
             {
-                if (userInput <= vehicleList.Count)
+                if ((userInput < vehicleList.Count) && !(userInput < 0))
                 {
-                    ServiceRecord serviceRecord = new ServiceRecord();
-                    vehicleList[userInput].vehicleMaintenanceRecord.Add(serviceRecord);
                     Console.WriteLine("Please enter the maintenance that was performed on the vehicle");
-                    vehicleList[userInput].vehicleMaintenanceRecord[userInput].ServicePerformed = Console.ReadLine();
+                    //serviceRecord.ServicePerformed = Console.ReadLine();
+                    string? maintenancePerformed = Console.ReadLine();
                     Console.WriteLine("Please enter the date the maintenance was performed - Format: MM/DD/YYYY");
-                    vehicleList[userInput].vehicleMaintenanceRecord[userInput].ServiceDate = Console.ReadLine();
+                    //serviceRecord.ServiceDate = Console.ReadLine();
+                    string? maintenanceDate = Console.ReadLine();
                     Console.WriteLine("Please enter the milage of the vehicle");
-                    if (int.TryParse(Console.ReadLine(), out int miles))
-                    {
-                        vehicleList[userInput].vehicleMaintenanceRecord[userInput].Milage = miles;
-                    }
-                    else
+                    if (!int.TryParse(Console.ReadLine(), out int miles) || (miles < 0))
                     {
                         Console.WriteLine("Invalid input\nPress enter to return to the menu");
                         Console.ReadLine();
+                        return;
                     }
 
-                    Console.WriteLine("Maintenance record added\nPress Enter to return to the main menu");
+                    ServiceRecord serviceRecord = new ServiceRecord();
+
+                    serviceRecord.ServicePerformed = maintenancePerformed;
+                    serviceRecord.ServiceDate = maintenanceDate;
+                    serviceRecord.Mileage = miles;
+
+                    vehicleList[userInput].MaintenanceRecords.Add(serviceRecord);
+
+                    Console.WriteLine("\nMaintenance record added\nPress Enter to return to the main menu");
                     Console.ReadLine();
                 }
                 else
@@ -147,7 +152,7 @@ while (true)
         }
     }
 
-    void ViewMaintenanceRecord()
+    void ViewMaintenanceRecords()
     {
         if (vehicleList.Count > 0)
         {
@@ -160,13 +165,14 @@ while (true)
 
             if (int.TryParse(Console.ReadLine(), out int userInput))
             {
-                if (userInput <= vehicleList.Count)
+                if ((userInput < vehicleList.Count) && !(userInput < 0))
                 {
-                    if (vehicleList[userInput].vehicleMaintenanceRecord.Count > 0)
+                    if (vehicleList[userInput].MaintenanceRecords.Count > 0)
                     {
-                        foreach (var maintenanceRecord in vehicleList[userInput].vehicleMaintenanceRecord)
+                        foreach (var maintenanceRecord in vehicleList[userInput].MaintenanceRecords)
                         {
-                            Console.WriteLine(maintenanceRecord);
+                            Console.WriteLine($"Service performed: {maintenanceRecord.ServicePerformed} | Service date: {maintenanceRecord.ServiceDate} | "
+                                            + $"Mileage recorded at time of service: {maintenanceRecord.Mileage}");
                         }
 
                         Console.WriteLine("\nPress Enter to return to menu");
@@ -200,7 +206,7 @@ while (true)
 
             for (int i = 0; i < vehicleList.Count; i++)
             {
-                Console.WriteLine($"{i}: {vehicleList[i].Make} {vehicleList[i].Model} {vehicleList[i].Year} Last recorded maintenance: {vehicleList[i].vehicleMaintenanceRecord.LastOrDefault()}");
+                Console.WriteLine($"{i}: {vehicleList[i].Make} {vehicleList[i].Model} {vehicleList[i].Year}");
             }
 
             /* for (int i = vehicleList.Count - 1; i >= 0; i--) // conditional if statement or while loop will be an improvement over a for loop
@@ -226,7 +232,7 @@ while (true)
                         return; // for loop becomes unreachable when default case is set to return instead of break
                 } */
 
-            if (int.TryParse(Console.ReadLine(), out int userInput) && (userInput <= vehicleList.Count))
+            if (int.TryParse(Console.ReadLine(), out int userInput) && (userInput < vehicleList.Count) && !(userInput < 0))
             {
                 vehicleList.RemoveAt(userInput);
                 Console.WriteLine("\nVehicle Removed\nPress Enter");
@@ -251,12 +257,12 @@ class Vehicle
     public string? Make { get; set; }
     public string? Model { get; set; }
     public int Year { get; set; }
-    public List<ServiceRecord> vehicleMaintenanceRecord { get; } = new List<ServiceRecord>();
+    public List<ServiceRecord> MaintenanceRecords { get; } = new List<ServiceRecord>();
 }
 
 class ServiceRecord
 {
     public string? ServicePerformed { get; set; }
     public string? ServiceDate { get; set; }
-    public int Milage { get; set; }
+    public int Mileage { get; set; }
 }
