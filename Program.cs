@@ -73,11 +73,6 @@ while (true)
 
     void ViewVehicles()
     {
-        /* foreach (var vehicle in vehicleList)
-        {
-            Console.WriteLine($"{vehicleList.Count}: {vehicle.Make} {vehicle.Model} {vehicle.Year}");
-        } */
-
         Console.WriteLine();
 
         if (vehicleList.Count > 0)
@@ -114,10 +109,8 @@ while (true)
                 if ((userInput < vehicleList.Count) && !(userInput < 0))
                 {
                     Console.WriteLine("Please enter the maintenance that was performed on the vehicle");
-                    //serviceRecord.ServicePerformed = Console.ReadLine();
                     string? maintenancePerformed = Console.ReadLine();
                     Console.WriteLine("Please enter the date the maintenance was performed - Format: MM/DD/YYYY");
-                    //serviceRecord.ServiceDate = Console.ReadLine();
                     string? maintenanceDate = Console.ReadLine();
                     Console.WriteLine("Please enter the milage of the vehicle");
                     if (!int.TryParse(Console.ReadLine(), out int miles) || (miles < 0))
@@ -208,29 +201,6 @@ while (true)
             {
                 Console.WriteLine($"{i}: {vehicleList[i].Make} {vehicleList[i].Model} {vehicleList[i].Year}");
             }
-
-            /* for (int i = vehicleList.Count - 1; i >= 0; i--) // conditional if statement or while loop will be an improvement over a for loop
-            {
-                switch (i)
-                {
-                    case var _ when int.TryParse(Console.ReadLine(), out int userInput):
-                        if (userInput <= vehicleList.Count)
-                        {
-                            vehicleList.RemoveAt(userInput);
-                            Console.WriteLine("\nVehicle Removed\nPress Enter");
-                            Console.ReadLine();
-                        }
-                        else
-                        {
-                            Console.WriteLine("\nInvalid input\nPress Enter");
-                            Console.ReadLine();
-                        }
-                        return;
-                    default:
-                        Console.WriteLine("\nInvalid Input\nPress Enter");
-                        Console.ReadLine();
-                        return; // for loop becomes unreachable when default case is set to return instead of break
-                } */
 
             if (int.TryParse(Console.ReadLine(), out int userInput) && (userInput < vehicleList.Count) && !(userInput < 0))
             {
