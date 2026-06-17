@@ -1,4 +1,6 @@
-﻿List<Vehicle> vehicleList = new List<Vehicle>();
+﻿using System.Text.Json;
+
+List<Vehicle> vehicleList = new List<Vehicle>();
 
 while (true)
 {
@@ -31,6 +33,9 @@ while (true)
                 DeleteVehicle();
                 break;
             case 6:
+                string fileName = "VehicleMaintenanceTracker.json";
+                string jsonString = JsonSerializer.Serialize(vehicleList);
+                File.WriteAllText(fileName, jsonString);
                 return;
             default:
                 Console.WriteLine("Invalid option\n");
@@ -221,6 +226,7 @@ while (true)
         }
     }
 }
+
 
 class Vehicle
 {
