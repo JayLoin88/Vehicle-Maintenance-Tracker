@@ -1,6 +1,20 @@
 ﻿using System.Text.Json;
 
-List<Vehicle> vehicleList = new List<Vehicle>();
+List<Vehicle> vehicleList;
+string fileName = "VehicleMaintenanceTracker.json";
+
+if (File.Exists(fileName))
+{
+    var dataFile = File.ReadAllText(fileName);
+    vehicleList = JsonSerializer.Deserialize<List<Vehicle>>(dataFile) ?? new List<Vehicle>();
+}
+else
+{
+    vehicleList = new List<Vehicle>();
+}
+
+
+//List<Vehicle> vehicleList = new List<Vehicle>();
 
 while (true)
 {
@@ -33,7 +47,6 @@ while (true)
                 DeleteVehicle();
                 break;
             case 6:
-                string fileName = "VehicleMaintenanceTracker.json";
                 string jsonString = JsonSerializer.Serialize(vehicleList);
                 File.WriteAllText(fileName, jsonString);
                 return;
@@ -233,7 +246,7 @@ class Vehicle
     public string? Make { get; set; }
     public string? Model { get; set; }
     public int Year { get; set; }
-    public List<ServiceRecord> MaintenanceRecords { get; } = new List<ServiceRecord>();
+    public List<ServiceRecord> MaintenanceRecords { get; set; } = new List<ServiceRecord>();
 }
 
 class ServiceRecord
