@@ -2,19 +2,46 @@
 
 List<Vehicle> vehicleList;
 string fileName = "VehicleMaintenanceTracker.json";
+string backupFile = "VehicleMaintenanceTracker.backup.json";
 
 if (File.Exists(fileName))
 {
     var dataFile = File.ReadAllText(fileName);
-    vehicleList = JsonSerializer.Deserialize<List<Vehicle>>(dataFile) ?? new List<Vehicle>();
+
+    try
+    {
+        vehicleList = JsonSerializer.Deserialize<List<Vehicle>>(dataFile) ?? new List<Vehicle>();
+    }
+    catch
+    {
+        while (true)
+        {
+            Console.WriteLine("Corrupted or invalid data file. Do you wish to continue? Proceeding will overwrite current save file (VehicleMaintenanceTracker.json)");
+            Console.WriteLine("1. yes\n2. No\n");
+            string? userInput = Console.ReadLine();
+
+            switch (userInput)
+            {
+                case "1":
+                    File.Copy(fileName, backupFile, true);
+                    vehicleList = new List<Vehicle>();
+                    break;
+                case "2":
+                    Environment.Exit(0);
+                    return;
+                default:
+                    Console.WriteLine("Invalid option\n");
+                    continue;
+            }
+
+            break;
+        }
+    }
 }
 else
 {
     vehicleList = new List<Vehicle>();
 }
-
-
-//List<Vehicle> vehicleList = new List<Vehicle>();
 
 while (true)
 {
@@ -47,7 +74,7 @@ while (true)
                 DeleteVehicle();
                 break;
             case 6:
-                string jsonString = JsonSerializer.Serialize(vehicleList);
+                string jsonString = JsonSerializer.Serialize(vehicleList, JsonOptions.Options);
                 File.WriteAllText(fileName, jsonString);
                 return;
             default:
@@ -84,6 +111,9 @@ while (true)
 
             Console.WriteLine("\nVehicle entered\nPress enter to return to the main menu");
             Console.ReadLine();
+
+            string jsonString = JsonSerializer.Serialize(vehicleList, JsonOptions.Options);
+            File.WriteAllText(fileName, jsonString);
 
             break;
         }
@@ -146,6 +176,9 @@ while (true)
 
                     vehicleList[userInput].MaintenanceRecords.Add(serviceRecord);
 
+                    string jsonString = JsonSerializer.Serialize(vehicleList, JsonOptions.Options);
+                    File.WriteAllText(fileName, jsonString);
+
                     Console.WriteLine("\nMaintenance record added\nPress Enter to return to the main menu");
                     Console.ReadLine();
                 }
@@ -180,6 +213,7 @@ while (true)
                 {
                     if (vehicleList[userInput].MaintenanceRecords.Count > 0)
                     {
+                        Console.WriteLine(); // added for terminal formatting to improve readability
                         foreach (var maintenanceRecord in vehicleList[userInput].MaintenanceRecords)
                         {
                             Console.WriteLine($"Service performed: {maintenanceRecord.ServicePerformed} | Service date: {maintenanceRecord.ServiceDate} | "
@@ -223,6 +257,10 @@ while (true)
             if (int.TryParse(Console.ReadLine(), out int userInput) && (userInput < vehicleList.Count) && !(userInput < 0))
             {
                 vehicleList.RemoveAt(userInput);
+
+                string jsonString = JsonSerializer.Serialize(vehicleList, JsonOptions.Options);
+                File.WriteAllText(fileName, jsonString);
+
                 Console.WriteLine("\nVehicle Removed\nPress Enter");
                 Console.ReadLine();
             }
@@ -254,4 +292,12 @@ class ServiceRecord
     public string? ServicePerformed { get; set; }
     public string? ServiceDate { get; set; }
     public int Mileage { get; set; }
+}
+
+class JsonOptions
+{
+    public static readonly JsonSerializerOptions Options = new()
+    {
+        WriteIndented = true
+    };
 }
