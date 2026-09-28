@@ -160,7 +160,7 @@ while (true)
                     string? maintenancePerformed = Console.ReadLine();
                     Console.WriteLine("Please enter the date the maintenance was performed - Format: MM/DD/YYYY");
                     string? maintenanceDate = Console.ReadLine();
-                    Console.WriteLine("Please enter the milage of the vehicle");
+                    Console.WriteLine("Please enter the mileage of the vehicle");
                     if (!int.TryParse(Console.ReadLine(), out int miles) || (miles < 0))
                     {
                         Console.WriteLine("Invalid input\nPress enter to return to the menu");
