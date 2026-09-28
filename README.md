@@ -15,7 +15,8 @@ This project was built to strengthen my understanding of C# fundamentals, object
 * Add maintenance records to individual vehicles
 * View maintenance history for each vehicle
 * Delete vehicles and their associated maintenance records
-* Validate user input to prevent invalid selections and data
+* Validate menu selections and numeric input
+* Detect invalid or corrupted save data and create a backup before resetting
 * Save vehicle and maintenance data using JSON serialization
 * Automatically load saved data when the application starts
 
