@@ -10,7 +10,7 @@ This project was built to strengthen my understanding of C# fundamentals, object
 
 ## Features
 
-* Add vehicles with information such as make, model, year, and mileage
+* Add vehicles with information such as make, model, and year
 * View all saved vehicles
 * Add maintenance records to individual vehicles
 * View maintenance history for each vehicle
